@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="utf-8" />
+	<title>プロトタイプ継承の例サンプル</title>
+	<script src="../angular.min.js"></script>
+	<script>
+		angular.module('app', [])
+			.controller('ParentController', ['$scope', function($scope){
+				$scope.value = 128;
+				$scope.incrementValue = function() {
+					this.value++;
+				};
+			}])
+			.controller('ChildController', ['$scope', function($scope){
+				$scope.decrementValue = function() {
+					this.value--;
+				};
+			}]);
+	</script>
+</head>
+<body>
+	プロトタイプ継承の例サンプル
+	<div ng-controller="ParentController">
+		<h3>Parent</h3>
+		<p>value: {{value}}</p>
+		<button ng-click="incrementValue()">increment value</button>
+		<div ng-controller="ChildController">
+			<h3>Child</h3>
+			<p>value1: {{value}}</p>
+			<button ng-click="decrementValue()">decrement value</button>
+		</div>
+	</div>
+</body>
+</html>

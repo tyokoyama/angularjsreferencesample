@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html ng-app>
+<head>
+	<meta charset="utf-8" />
+	<title>angular.copyサンプル</title>
+	<script src="../angular.min.js"></script>
+	<script>
+		var srcObj = {
+			id: '123',
+			description: '宿題をする',
+			dueDate: new Date('2015/01/25'),
+			items: [
+				{name: '国語'},
+				{name: '数学'},
+				{name: '英語'}
+			]
+		};
+
+		var destObj1 = angular.copy(srcObj);
+
+		var destObj2 = {
+			category: '宿題'
+		};
+
+		angular.copy(srcObj, destObj2);
+
+		srcObj.items.push({name: '物理'});
+
+		console.log('destObj1: ');
+		console.log(destObj1);
+		console.log('destObj2: ');
+		console.log(destObj2);
+	</script>
+</head>
+<body>
+	angular.copyサンプル
+</body>
+</html>

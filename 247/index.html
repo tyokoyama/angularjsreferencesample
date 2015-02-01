@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html ng-app>
+<head>
+	<meta  charset="utf-8" />
+	<title>ngHrefサンプル</title>
+	<script src="../angular.min.js"></script>
+</head>
+<body>
+	<div>
+		<a href="{{url}}" ng-href="{{url}}">リンク先</a>
+	</div>
+	<div ng-init="url='';googleURL='http://www.google.co.jp';">
+		<input type="radio" ng-model="url" value="">リンク先なし
+		<input type="radio" ng-model="url" ng-value="googleURL">Google
+		{{url}}
+	</div>
+</body>
+</html>

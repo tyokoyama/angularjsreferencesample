@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="utf-8" />
+	<title>angular.Module#Controllerサンプル</title>
+	<script src="../angular.min.js"></script>
+	<script>
+		angular.module('app', [])
+			.controller('NormalController', ['$scope', function($s){
+				$s.message = "Hello, World!";
+				$s.goodbye = function() {
+					$s.message = 'Goodbye, Everyone!';
+				}
+			}]);
+	</script>
+</head>
+<body>
+	angular.Module#Controllerサンプル
+	<div ng-controller="NormalController">
+		<p>{{message}}</p>
+		<button ng-click="goodbye()">push</button>
+	</div>
+</body>
+</html>

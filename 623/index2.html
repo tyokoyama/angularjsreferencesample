@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="utf-8" />
+	<title>プロトタイプ継承の例サンプル2</title>
+	<script src="../angular.min.js"></script>
+	<script>
+		angular.module('app', [])
+			.controller('ParentController', ['$scope', function($scope){
+				$scope.value = 123;
+				$scope.data = {value: 456};
+			}])
+			.controller('ChildController', ['$scope', function($scope){
+				$scope.changeValue = function() {
+					$scope.$parent.value = 321;
+					$scope.data.value = 654;
+				};
+			}]);
+	</script>
+</head>
+<body>
+	プロトタイプ継承の例サンプル2
+	<div ng-controller="ParentController">
+		<h3>Parent</h3>
+		<ul>
+			<li>value: {{value}}</li>
+			<li>data.value: {{data.value}}</li>
+		</ul>
+		<div ng-controller="ChildController">
+			<h3>Child</h3>
+			<ul>
+				<li>$parent.value: {{$parent.value}}</li>
+				<li>data.value: {{data.value}}</li>
+			</ul>
+			<button ng-click="changeValue()">change value</button>
+		</div>
+	</div>
+</body>
+</html>

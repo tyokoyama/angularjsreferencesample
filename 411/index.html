@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html ng-app>
+<head>
+	<meta charset="utf-8" />
+	<title>angular.bindサンプル</title>
+	<script src="../angular.min.js"></script>
+	<script>
+	function getMessage() {
+		return this.message;
+	}
+
+	function add(a, b) {
+		return a + b;
+	}
+
+	function MyClass() {
+		this.message = 'Hello World!';
+	}
+
+	var msg = getMessage();
+	console.log('not bound getMessage(): ' + msg);
+
+	var context = {
+		message: 'Hello World!'
+	};
+
+	var fn = angular.bind(context, getMessage);
+	var msg = fn();
+
+	console.log('bound getMessage(): ' + msg);
+
+	MyClass.prototype.getMessage = function() {
+		console.log(this.message);
+	}
+
+	MyClass.prototype.setCallback = function() {
+		// $timeoutを使うようになっているが、Controller外なので…。
+		setTimeout(this.getMessage, 1000);
+		setTimeout(angular.bind(this, this.getMessage), 2000);
+	}
+
+	var c = new MyClass();
+	c.setCallback();
+
+	var add5 = angular.bind(null, add, 5);
+
+	console.log('add5(8): ' + add5(8));
+	</script>
+</head>
+<body>
+	angular.bindサンプル
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="utf-8" />
+	<title>Controllerの階層化サンプル</title>
+	<script src="../angular.min.js"></script>
+	<script>
+		angular.module('app', [])
+			.controller('ParentController', ['$scope', function($scope){
+				$scope.value = 'Parent value';
+				$scope.getUpperValue = function() {
+					return angular.uppercase($scope.value);
+				}
+			}])
+			.controller('ChildController', ['$scope', function($scope){
+				$scope.newValue = 'Child value';
+			}]);
+	</script>
+</head>
+<body>
+	Controllerの階層化サンプル
+	<div ng-controller="ParentController">
+		<h3>Parent</h3>
+		<ul>
+			<li>value: {{value}}</li>
+			<li>upperValue: {{getUpperValue()}}</li>
+			<li>newValue: {{newValue}}</li>
+		</ul>
+		<div ng-controller="ChildController">
+			<h3>Child</h3>
+			<ul>
+				<li>value: {{value}}</li>
+				<li>upperValue: {{getUpperValue()}}</li>
+				<li>newValue: {{newValue}}</li>
+			</ul>
+		</div>
+	</div>
+</body>
+</html>
