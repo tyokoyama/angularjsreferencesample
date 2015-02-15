@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="utf-8" />
+	<title>スコープの監視サンプル</title>
+	<script src="../angular.min.js"></script>
+	<script>
+		angular.module('app', [])
+			.controller('WatchController', ['$scope', function ($scope) {
+				$scope.message = 'Hello, World';
+				$scope.result = '';
+				$scope.$watch('message', function(newValue, oldValue, scope){
+					if(angular.equals(newValue, 'success')) {
+						scope.result = 'ok';
+					}
+				});
+			}])
+			.controller('WatchGroupController', ['$scope', function ($scope){
+				$scope.greeting = 'Hello, World!';
+				$scope.message2 = 'Hello, World!';
+				$scope.message3 = 'Hello, World!';
+				$scope.result = '';
+				$scope.$watchGroup([
+					function() {
+						return $scope.greeting;
+					},
+					function() {
+						return $scope.message2;
+					},
+					function() {
+						return $scope.message3;
+					}
+				], function (newValue, oldValue, scope){
+					scope.result = angular.toJson(newValue);
+				});
+			}])
+			.controller('WatchCollectionController', ['$scope', function ($scope){
+				$scope.items = [];
+				$scope.result = '';
+				$scope.$watchCollection('items', function (newCollection, oldCollection, scope) {
+					if(newCollection.length == 3) {
+						scope.result = angular.toJson(newCollection);
+					}
+				});
+			}]);
+	</script>
+</head>
+<body>
+	スコープの監視サンプル
+	<div ng-controller="WatchController">
+		<input type="text" ng-model="message" />
+		<p>{{result}}</p>
+	</div>
+
+	<div ng-controller="WatchGroupController">
+		<input type="text" ng-model="greeting" />
+		<input type="text" ng-model="message2" />
+		<input type="text" ng-model="message3" />
+
+		<p>{{result}}</p>
+	</div>
+	<div ng-controller="WatchCollectionController">
+		<input type="text" ng-model="message" />
+		<button ng-click="items.push(message);">push</button>
+		<p>{{result}}</p>
+	</div>
+</body>
+</html>
