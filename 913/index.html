@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="utf-8" />
+	<title>Module#Providerのサンプル</title>
+	<script src="../angular.min.js"></script>
+	<script src="../angular-resource.min.js"></script>
+	<script>
+		// サーバがないからこのサンプルは動作しない。
+		// $resourceがサーバにリクエストを送るので。
+		var app = angular.module('app', ['ngResource'])
+			.provider('MyService', function() {
+				this.$get = function() {
+					var aService = {};
+					aService.message = 'This is my provider.';
+					aService.value = {
+						value1: 11111,
+						value2: 77777
+					};
+					aService.add = function(a, b) {
+						return a + b;
+					};
+
+					return aService;
+				};
+			});
+
+
+
+		app.controller('ProviderController', ['$scope', 'MyService', function($scope, MyService) {
+			$scope.service = MyService;
+		}]);
+
+	</script>
+</head>
+<body>
+	Providerサンプル
+	<div ng-controller="ProviderController">
+		<pre>service: {{service.add(1, 2)}}</pre>
+	</div>
+</body>
+</html>

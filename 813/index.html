@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="utf-8" />
+	<title>配列のフィルターサンプル</title>
+	<script src="../angular.min.js"></script>
+	<script>
+		angular.module('app', [])
+			.filter('pickupNumber', function () {
+				return function fizzBuzzFilter(values) {
+					if(!angular.isArray(values)) {
+						return value;
+					}
+
+					var newValues = [];
+					angular.forEach(values, function(v) {
+						if (angular.isNumber(v)) {
+							newValues.push(v);
+						}
+					})
+
+					return newValues;
+				};
+			});
+	</script>
+</head>
+<body>
+	配列のフィルターサンプル
+	<div ng-init="items = [1, 2, 'Fizz', 4, 'Buzz', 'Fizz', 7, 8, 'Fizz', 'Buzz', 11, 'Fizz', 13, 14, 'Fizz Buzz']">
+		<div ng-repeat="item in items | pickupNumber">
+			{{item}}<br />
+		</div>
+	</div>
+</body>
+</html>

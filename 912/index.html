@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="utf-8" />
+	<title>Module#factoryのサンプル</title>
+	<script src="../angular.min.js"></script>
+	<script src="../angular-resource.min.js"></script>
+	<script>
+		// サーバがないからこのサンプルは動作しない。
+		// $resourceがサーバにリクエストを送るので。
+		var app = angular.module('app', ['ngResource'])
+			.factory('factoryService', function() {
+				var aService = {};
+				aService.message = 'This is my factory!';
+				aService.value = {
+					value1: 11111,
+					value2: 22222
+				};
+				aService.add = function (a, b) {
+					return a + b;
+				};
+
+				return aService;
+			});
+
+		app.constant('apiUrl', '/api/products.json');
+		app.constant('apiKey', 'dummy-key');
+
+		app.factory('productsService',
+			['$resource', 'apiUrl', 'apiKey',
+			function($resource, apiUrl, apiKey) {
+				return $resource(apiUrl).query({api_key: apiKey});
+			}]);
+
+		app.controller('ProductsController', ['$scope', 'productsService', function($scope, productsService) {
+			$scope.products = productsService;
+		}]);
+
+	</script>
+</head>
+<body>
+	Factoryサンプル
+	<div ng-controller="ProductsController">
+		<pre>products: {{products}}</pre>
+	</div>
+</body>
+</html>

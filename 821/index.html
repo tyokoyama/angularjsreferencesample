@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="utf-8" />
+	<title>フィルター実装時の注意点サンプル</title>
+	<script src="../angular.min.js"></script>
+	<script>
+		angular.module('app', [])
+			.filter('random', function() {
+				return function (value) {
+					if(angular.isUndefined(value)) {
+						return value;
+					}
+
+					return value + Math.random().toString();
+				};
+			});
+	</script>
+</head>
+<body>
+	フィルター実装時の注意点サンプル
+	<div ng-init="items = [1, 2, 'Fizz', 4, 'Buzz', 'Fizz', 7, 8, 'Fizz', 'Buzz', 11, 'Fizz', 13, 14, 'Fizz Buzz']">
+		<div ng-repeat="item in items | random">
+			{{item}}<br />
+		</div>
+	</div>
+</body>
+</html>

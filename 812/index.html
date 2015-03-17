@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="utf-8" />
+	<title>単一値のフィルターサンプル</title>
+	<script src="../angular.min.js"></script>
+	<script>
+		angular.module('app', [])
+			.filter('fizzbuzz', function createFizzBazzFilter() {
+				return function fizzBuzzFilter(value) {
+					if(!angular.isNumber(value)) {
+						return value;
+					}
+					if(value % 15 == 0) {
+						return 'Fizz Buzz';
+					}
+					if(value % 3 == 0) {
+						return 'Fizz';
+					}
+					if(value % 5 == 0) {
+						return 'Buzz';
+					}
+
+					return value;
+				};
+			});
+	</script>
+</head>
+<body>
+	単一値のフィルターサンプル
+	<div ng-repeat="n in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]">
+		{{n | fizzbuzz}}
+	</div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="utf-8" />
+	<title>オプションパラメータサンプル</title>
+	<script src="../angular.min.js"></script>
+	<script>
+		angular.module('app', [])
+			.filter('pickupNumber', function () {
+				return function (values, denyOdd, denyEven, prefix, suffix) {
+					if(!angular.isArray(values)) {
+						return value;
+					}
+
+					prefix = prefix || '';
+					suffix = suffix || '';
+					var newValues = [];
+					angular.forEach(values, function(v) {
+						if (angular.isNumber(v) && !(denyOdd && v % 2 == 1) && !(denyEven && v % 2 == 0)) {
+							newValues.push(prefix + v + suffix);
+						}
+					});
+
+					return newValues;
+				};
+			});
+	</script>
+</head>
+<body>
+	オプションパラメータサンプル
+	<div ng-init="items = [1, 2, 'Fizz', 4, 'Buzz', 'Fizz', 7, 8, 'Fizz', 'Buzz', 11, 'Fizz', 13, 14, 'Fizz Buzz']">
+		奇数：<input type="checkbox" ng-model="allowOdd"><br />
+		偶数：<input type="checkbox" ng-model="allowEven"><br/>
+
+		<div ng-repeat="item in items | pickupNumber:!allowOdd:!allowEven:'<':'>'">
+			{{item}}<br />
+		</div>
+	</div>
+</body>
+</html>

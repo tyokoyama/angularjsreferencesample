@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="utf-8" />
+	<title>フィルターの組み合わせサンプル</title>
+	<script src="../angular.min.js"></script>
+	<script>
+		angular.module('app', [])
+			.filter('unique', function () {
+				return function (values) {
+					if(!angular.isArray(values)) {
+						return value;
+					}
+
+					var newValues = [];
+					angular.forEach(values, function(v) {
+						if(newValues.indexOf(v) < 0) {
+							newValues.push(v);
+						}
+					});
+
+					return newValues;
+				};
+			})
+			.filter('uniqueOrderBy', ['$filter', function createUniqueOrderByFilter($filter) {
+				return function uniqueOrderBy(values, exp, reverse) {
+					if(!angular.isArray(values)) {
+						return value;
+					}
+
+					var unique = $filter('unique');
+					var orderBy = $filter('orderBy');
+
+					var uniqueValues = unique(values);
+					return orderBy(uniqueValues, exp || angular.identity, reverse);
+				}
+			}]);
+	</script>
+</head>
+<body>
+	フィルターの組み合わせサンプル
+	<div ng-init="items = [1, 2, 'Fizz', 4, 'Buzz', 'Fizz', 7, 8, 'Fizz', 'Buzz', 11, 'Fizz', 13, 14, 'Fizz Buzz']">
+		<div ng-repeat="item in items | uniqueOrderBy">
+			{{item}}<br />
+		</div>
+		<div ng-repeat="item in items | unique | orderBy">
+			{{item}}<br />
+		</div>
+	</div>
+</body>
+</html>
