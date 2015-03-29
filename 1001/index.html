@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="utf-8" />
+	<title>ディレクティブの処理</title>
+	<script src="../angular.min.js"></script>
+	<script>
+		var app = angular.module('app', [])
+					.directive('myDirective', function() {
+						return {
+							compile: function compile(tElement, tAttrs, tTransclude) {
+								// コンパイルの処理: タグ内のテキストを設定（初期設定？）
+								tElement.text('This is my favorite directive!');
+								return function link(scope, iElement, iAttrs, controller, iTransclude) {
+									// リンク処理
+									scope.$watch('message', function(newVal) {
+										tElement.text(newVal);
+									});
+								}
+							}
+						}
+					});
+			app.controller('SampleController', ['$scope', function($scope) {
+
+			}]);
+	</script>
+</head>
+<body>
+	<div ng-controller="SampleController">
+		ディレクティブの処理
+		<input type="text" ng-model="message">
+		<div my-directive>
+		</div>
+	</div>
+</body>
+</html>

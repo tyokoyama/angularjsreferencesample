@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="utf-8" />
+	<title>comboBoxディレクティブ</title>
+	<script src="../angular.min.js"></script>
+	<script>
+		var app = angular.module('app', [])
+					.directive('comboBox', function() {
+						return {
+								scope: {
+									selectedItem: '=',
+									allItems: '='
+								},
+								restrict: 'EA',
+								template: '<div class="combobox">' +
+											'<input type="text" ng-model="selectedItem">' +
+											'<ul ng-show="isFocus">' +
+											'<li ng-repeat="item in allItems" ng-click="click($event, item)">' +
+											'{{item}}' +
+											'</li>' +
+											'</ul>' +
+											'</div>',
+								link: function(scope, iElement) {
+									scope.isFocus = false;
+
+									iElement.find('input')
+										.on('focus', function() {
+											scope.$apply(function() {
+												scope.isFocus = true;
+											});
+										});
+
+									scope.click = function($event, item) {
+										$event.preventDefault();
+										$event.stopPropagation();
+										scope.selectedItem = item;
+										scope.isFocus = false;
+									};
+								}
+							};
+					});
+			app.controller('SampleController', ['$scope', function($scope) {
+
+			}]);
+	</script>
+</head>
+<body>
+	<div ng-init="statuses = ['未所有', '未読', '読中', '読了']" ng-controller="SampleController">
+		comboBoxディレクティブ
+		<!-- <div combo-box selected-iem="status" all-items="statuses"></div> -->
+ 	<combo-box selected-item="status" all-items="statuses"></combo-box>
+</div>
+</body>
+</html>
