@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="utf-8" />
+	<title>bookItemディレクティブ</title>
+	<script src="../angular.min.js"></script>
+	<script>
+		var app = angular.module('app', [])
+					.directive('comboBox', function() {
+						return {
+								scope: {
+									selectedItem: '=',
+									allItems: '='
+								},
+								restrict: 'EA',
+								template: '<div class="combobox">' +
+											'<input type="text" ng-model="selectedItem">' +
+											'<ul ng-show="isFocus">' +
+											'<li ng-repeat="item in allItems" ng-click="click($event, item)">' +
+											'{{item}}' +
+											'</li>' +
+											'</ul>' +
+											'</div>',
+								link: function(scope, iElement) {
+									scope.isFocus = false;
+
+									iElement.find('input')
+										.on('focus', function() {
+											scope.$apply(function() {
+												scope.isFocus = true;
+											});
+										});
+
+									scope.click = function($event, item) {
+										$event.preventDefault();
+										$event.stopPropagation();
+										scope.selectedItem = item;
+										scope.isFocus = false;
+									};
+								}
+							};
+					})
+					.directive('rating', [function($timeout) {
+						return {
+								restrict: 'E',
+								require: 'ngModel',
+								scope: {
+									max: '=',
+									readonly: '='
+								},
+								link: function(scope, element, attrs, ngModelCtrl) {
+									ngModelCtrl.$render = function() {
+										updateRate(ngModelCtrl.$viewValue);
+									};
+
+									function updateRate(rate) {
+										angular.forEach(element.children(), function(child) {
+											angular.element(child).off('click');
+										});
+										element.empty();
+
+										for(var i = 0; i < scope.max; i++) {
+											var span = angular.element('<span></span>');
+											var star = i < rate ? '★' : '☆';
+											span.text(star);
+
+											if(!scope.readonly) {
+												span.addClass('changeable');
+												(function() {
+													var count = i + 1;
+													span.on('click', function() {
+														scope.$apply(function() {
+															ngModelCtrl.$setViewValue(count);
+															updateRate(count);
+														});
+													});
+												})();
+											}
+											element.append(span);
+										}
+									}
+
+									ngModelCtrl.$formatters.push(function (rate){
+										if(rate < 0) {
+											return 0;
+										} else if(rate > scope.max) {
+											return scope.max;
+										} else {
+											return rate;
+										}
+									});
+								}
+							};
+					}])
+					.directive('bookItem', [function($timeout) {
+						return {
+								restrict: 'EA',
+								require: '^bookList',
+								scope: {
+									book: '=',
+									statuses: '='
+								},
+								link: function(scope, element, attrs, bookListCtrl) {
+									scope.isEditMode = false;
+
+									bookListCtrl.addBookItem(scope);
+
+									scope.startEdit = function() {
+										if(bookListCtrl.anyDirty()) {
+											scope.$emit('cannot-edit', '編集中のアイテムがあります', new Date);
+											return;
+										};
+
+										bookListCtrl.addCancel();
+
+										scope.backupBook = angular.copy(scope.book);
+										scope.isEditMode = true;
+									};
+
+									scope.save = function() {
+										scope.isEditMode = false;
+										socpe.backupBook = null;
+									};
+
+									scope.cancel = function() {
+										if(!scope.isEditMode) {
+											return;
+										}
+
+										scope.book = scope.backupBook;
+										scope.backupBook = null;
+										scope.isEditMode = false;
+									}
+
+									scope.isDirty = function() {
+										if(!scope.isEditMode) {
+											return false;
+										}
+										return !angular.equals(scope.book, scope.backupBook);
+									};
+
+								}
+							};
+					}]);
+	</script>
+</head>
+<body>
+	bookListディレクティブ
+	<form class="book-item">
+		<div ng-hide="isEditMode">
+			<table>
+				<tr>
+					<td>タイトル</td>
+					<td>{{book.title}}</td>
+				</tr>
+				<tr>
+					<td>著者</td>
+					<td>{{book.author}}</td>
+				</tr>
+				<tr>
+					<td>ステータス</td>
+					<td>{{book.status}}</td>
+				</tr>
+				<tr>
+					<td>評価</td>
+					<td>
+						<rating ng-model="book.rate" max="5" readonly="true"></rating>
+					</td>
+				</tr>
+				<tr>
+					<td>読了日</td>
+					<td>{{book.readDate | fromnow}}</td>
+				</tr>
+			</table>
+			<button ng-click="startEdit()">編集</button>
+		</div>
+		<div class="edit-mode" ng-show="isEditMode">
+			<table>
+				<tr>
+					<td>タイトル</td>
+					<td><input type="text" ng-model="book.title"></td>
+				</tr>
+				<tr>
+					<td>著者</td>
+					<td><input type="text" ng-model="book.author"></td>
+				</tr>
+				<tr>
+					<td>ステータス</td>
+					<td><combo-box selected-item="book.status" all-items="statuses"></combo-box></td>
+				</tr>
+				<tr>
+					<td>評価</td>
+					<td>
+						<rating ng-model="book.rate" max="5"></rating>
+					</td>
+				</tr>
+				<tr>
+					<td>読了日</td>
+					<td><input type="date" ng-model="book.readDate"></td>
+				</tr>
+			</table>
+			<br />
+			<button ng-click="save()">保存</button>
+			<button ng-click="cancel()">キャンセル</button>
+		</div>
+	</form>
+</body>
+</html>
