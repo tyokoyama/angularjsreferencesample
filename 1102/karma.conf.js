@@ -18,6 +18,9 @@ module.exports = function(config) {
       '../angular.min.js',
       '../angular-mocks.js',
       '../angular-resource.min.js',
+      'fromnow.js',
+      'rating.js',
+      'storage.js',
       '*_spec.js'
     ],
 
