@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="utf-8" />
+	<title>sceサンプル</title>
+	<script src="../angular.min.js"></script>
+	<script src="../bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+	<script>
+		angular.module('app', [])
+			.controller('TrustedController', ['$scope', '$sce', function ($scope, $sce) {
+				$scope.dangerousHtml = '<button onclick="alert(\'danger & danger!\')">push</button>';
+				$scope.trustedDangerousHtml = $sce.trustAs($sce.HTML, $scope.dangerousHtml);
+			}]);
+	</script>
+</head>
+<body>
+<div ng-controller="TrustedController">
+	<h3>Dangerous HTML</h3>
+	<div ng-bind-html="trustedDangerousHtml"></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="utf-8" />
+	<title>linkyフィルター</title>
+	<script src="../angular.min.js"></script>
+	<script src="../bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+	<script>
+		angular.module('app', ['ngSanitize'])
+			.controller('LinkyController', ['$scope', function ($scope) {
+				$scope.link1 = 'http://example.com';
+				$scope.link2 = 'normal text http://example.com';
+				$scope.link3 = 'mailto:hoge@sample.com';
+				$scope.link4 = 'hoge@sample.com';
+				$scope.link5 = 'https://localhost.com';
+				$scope.link6 = 'ftp://foobar.co.jp';
+				$scope.link7 = 'file:///home/username/file.txt';
+				$scope.link8 = 'http://日本語ドメイン.com';
+			}]);
+	</script>
+</head>
+<body>
+<div ng-controller="LinkyController">
+	<h3>Linky Filter</h3>
+
+	<div ng-bind-html="link1 | linky"></div>
+	<br />
+	<div ng-bind-html="link2 | linky"></div>
+	<br />
+	<div ng-bind-html="link3 | linky"></div>
+	<br />
+	<div ng-bind-html="link4 | linky"></div>
+	<br />
+	<div ng-bind-html="link5 | linky"></div>
+	<br />
+	<div ng-bind-html="link6 | linky"></div>
+	<br />
+	<div ng-bind-html="link7 | linky"></div>
+	<br />
+	<div ng-bind-html="link8 | linky"></div>
+	<br />
+</div>
+</body>
+</html>
